@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  *
- * This code allows a motor wired to a motor with a mounted FRC camera
+ * This code allows a motor with a mounted FRC camera
  * controlled by a Jaguar speed controller to track a reflective tape target in
  * an "L" shape, as on the field of the 2014 FRC game.
  *
