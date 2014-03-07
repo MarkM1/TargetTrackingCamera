@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj.image.NIVisionException;
 import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
 
 /**
- * TargetLocator determines the location of the target relative to the camera.  
- * An image from the camera is stored on the cRio flash memory, and then filtered 
- * to eliminate everything except potential targets.  Then, a particle analysis
- * report uses criteria defined in this class to determine all particles on the 
- * screen.  Finally, the positions of the centers of these particles is printed
- * to the console.
+ * TargetLocator determines the location of the target relative to the camera.
+ * An image from the camera is stored on the cRio flash memory, and then
+ * filtered to eliminate everything except potential targets. Then, a particle
+ * analysis report uses criteria defined in this class to determine all
+ * particles on the screen. Finally, the positions of the centers of these
+ * particles is printed to the console.
  *
  *
  * @author (Mark Macerato, Team 3167)
@@ -23,10 +23,11 @@ import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
  */
 class TargetLocator {
 
-    AxisCamera camera = AxisCamera.getInstance();  //create an instance of the camera
+    AxisCamera camera = AxisCamera.getInstance("10.31.67.11");  //create an instance of the camera
     CriteriaCollection criteria = new CriteriaCollection();  //criteria for what constitutes a particle
+    double x;
 
-    public void findTarget() throws NIVisionException, AxisCameraException {  //determines the x-positions of the centers of mass of all particles
+    public double findTarget() throws NIVisionException, AxisCameraException {  //determines the x-positions of the centers of mass of all particles
 
         try {
 
@@ -35,8 +36,8 @@ class TargetLocator {
 
             ColorImage image;
             image = camera.getImage();  //store the image from the camera
-            BinaryImage thresholdImage = image.thresholdRGB(25, 255, 0, 45, 0, 47);  //filter out parts of image that do not possess a significant red component
-            BinaryImage bigObjectsImage = thresholdImage.removeSmallObjects(false, 2);  //filter out red objects too small to be the target
+            BinaryImage thresholdImage = image.thresholdRGB(79, 255, 71, 255, 113, 255);  //filter out parts of image that do not possess a significant green component
+            BinaryImage bigObjectsImage = thresholdImage.removeSmallObjects(false, 2);  //filter out green objects too small to be the target
             BinaryImage convexHullImage = bigObjectsImage.convexHull(false);  //fill in occluded rectangles
             BinaryImage filteredImage = convexHullImage.particleFilter(criteria);  //apply the criteria defined above
 
@@ -48,11 +49,9 @@ class TargetLocator {
             thresholdImage.free();
             image.free();
 
-            for (int i = 0; i < 11; i++) {
-                
-               System.out.println("" + reportArray[i].center_mass_x_normalized);  //print the positions of best 10 particles
-                
-            }
+            double x1 = reportArray[1].center_mass_x_normalized; //return center of mass of one bar
+            double x2 = reportArray[2].center_mass_x_normalized; //return center of mass of the other
+            x = (x1 + x2) / 2;  //take the average of both
 
         } catch (NIVisionException e) {
 
@@ -63,5 +62,7 @@ class TargetLocator {
             e.printStackTrace();
 
         }
+
+        return x;
     }
 }
