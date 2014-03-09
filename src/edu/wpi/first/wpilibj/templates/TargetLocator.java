@@ -31,13 +31,12 @@ class TargetLocator {
 
         try {
 
-            criteria.addCriteria(MeasurementType.IMAQ_MT_AREA, 30, 400, false);  //minimum size of a particle
-            criteria.addCriteria(MeasurementType.IMAQ_MT_AREA, 30, 400, false);
+            criteria.addCriteria(MeasurementType.IMAQ_MT_AREA, 5, 400, false);  //minimum size of a particle
 
             ColorImage image;
             image = camera.getImage();  //store the image from the camera
-            BinaryImage thresholdImage = image.thresholdRGB(79, 255, 71, 255, 113, 255);  //filter out parts of image that do not possess a significant green component
-            BinaryImage bigObjectsImage = thresholdImage.removeSmallObjects(false, 2);  //filter out green objects too small to be the target
+            BinaryImage thresholdImage = image.thresholdRGB(0, 0, 67, 255, 0, 111);  //filter out parts of image that do not possess a significant green component
+            BinaryImage bigObjectsImage = thresholdImage.removeSmallObjects(false, 4);  //filter out green objects too small to be the target
             BinaryImage convexHullImage = bigObjectsImage.convexHull(false);  //fill in occluded rectangles
             BinaryImage filteredImage = convexHullImage.particleFilter(criteria);  //apply the criteria defined above
 
@@ -49,9 +48,9 @@ class TargetLocator {
             thresholdImage.free();
             image.free();
 
-            double x1 = reportArray[1].center_mass_x_normalized; //return center of mass of one bar
-            double x2 = reportArray[2].center_mass_x_normalized; //return center of mass of the other
-            x = (x1 + x2) / 2;  //take the average of both
+//          double x1 = reportArray[1].center_mass_x_normalized; //return center of mass of one bar
+//          double x2 = reportArray[2].center_mass_x_normalized; //return center of mass of the other
+            x = reportArray[1].center_mass_x;  //take the average of both
 
         } catch (NIVisionException e) {
 
