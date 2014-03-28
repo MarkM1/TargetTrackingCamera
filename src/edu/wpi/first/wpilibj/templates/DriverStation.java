@@ -11,12 +11,16 @@ import edu.wpi.first.wpilibj.DriverStationLCD;
 class DriverStation {
 
     private final DriverStationLCD msg = DriverStationLCD.getInstance();  //The Driver Station
-
-    public void printReadyMessage() {  //Print a message indicating that code is loaded on the robot
-
+    
+    /**
+     * Print a message indicating that code is loaded on the robot
+     */
+    public void printReadyMessage() {  
+        
+        msg.clear();
         msg.println(DriverStationLCD.Line.kUser1, 1, "The Robot is Ready To Rock and Roll!");
         System.out.println("The Robot is Ready To Rock and Roll!");
-
+        msg.updateLCD();
     }
     
     public void print(String message) {  //print a given message to the driver station
