@@ -28,4 +28,14 @@ class DriverStation {
         msg.println(DriverStationLCD.Line.kUser1, 1, message);
         
     }
+    
+    public void update() {
+        
+        msg.updateLCD();
+    }
+    
+    public void clear() {
+        
+        msg.clear();
+    }
 }
