@@ -19,14 +19,17 @@ class Motor {
         if (TargetLocator.getRelPositionOfTarget() > acceptableRange) {  //if the target is too far to the right
 
             motor.set(1.0);
+            dirverStation.print("Turning right...");
 
         } else if (TargetLocator.getRelPositionOfTarget() < -acceptableRange) {  //if the target is too far to the left
 
             motor.set(0.0);
-
+            dirverStation.print("Turning left...");
+            
         } else if (TargetLocator.getRelPositionOfTarget() < acceptableRange && TargetLocator.getRelPositionOfTarget() > -acceptableRange) {  //If the camera is aligned
 
             motor.set(motor.get());
+            dirverStation.print("Aligned!");
 
         }
 
