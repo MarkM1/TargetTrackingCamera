@@ -27,20 +27,25 @@ class TargetLocator {
     CriteriaCollection criteria = new CriteriaCollection();  //criteria for what constitutes a particle
     double x;
 
-    public double findTarget() throws NIVisionException, AxisCameraException {  //determines the x-positions of the centers of mass of all particles
+    /**
+    * Find the x-CoG of the largest detected particle
+    * @return x x-CoG
+    */
+    public double findTarget() throws NIVisionException, AxisCameraException {  
 
         try {
 
             criteria.addCriteria(MeasurementType.IMAQ_MT_AREA, 5, 400, false);  //minimum size of a particle
 
+            //Filtering
             ColorImage image;
             image = camera.getImage();  //store the image from the camera
-            BinaryImage thresholdImage = image.thresholdRGB(0, 0, 67, 255, 0, 111);  //filter out parts of image that do not possess a significant green component
-            BinaryImage bigObjectsImage = thresholdImage.removeSmallObjects(false, 4);  //filter out green objects too small to be the target
+            BinaryImage thresholdImage = image.thresholdRGB(100, 255, 0, 25, 0, 25);  //filter out parts of image that do not possess a significant green component
+            BinaryImage bigObjectsImage = thresholdImage.removeSmallObjects(false, 4);  //filter out red objects too small to be the target
             BinaryImage convexHullImage = bigObjectsImage.convexHull(false);  //fill in occluded rectangles
             BinaryImage filteredImage = convexHullImage.particleFilter(criteria);  //apply the criteria defined above
 
-            ParticleAnalysisReport[] reportArray = filteredImage.getOrderedParticleAnalysisReports();  //creates an array of particle analysis reports
+            ParticleAnalysisReport[] particles = filteredImage.getOrderedParticleAnalysisReports();  //creates an array of particle analysis reports
 
             filteredImage.free();  //delete all images used above
             convexHullImage.free();
@@ -48,10 +53,15 @@ class TargetLocator {
             thresholdImage.free();
             image.free();
 
-//          double x1 = reportArray[1].center_mass_x_normalized; //return center of mass of one bar
-//          double x2 = reportArray[2].center_mass_x_normalized; //return center of mass of the other
-            x = reportArray[1].center_mass_x;  //take the average of both
-
+            //Scoring
+            double rectangularity = (particles[0].boundingRectArea / particles[0].particleArea) * 100; //Check these method calls
+            if(rectangularity > 80.0) {
+                x = particles[0].center_mass_x_normalized;  //store the CoG of the largets particle
+            } else {
+                x = 0.0;
+                System.out.println("No particles acquired");
+            }
+            
         } catch (NIVisionException e) {
 
             e.printStackTrace();
