@@ -23,10 +23,33 @@ class DriverStation {
         msg.updateLCD();
     }
     
-    public void print(String message) {  //print a given message to the driver station
+    public void print(String message, int lineNumber) {  //print a given message to the driver station
         
-        msg.println(DriverStationLCD.Line.kUser1, 1, message);
+        int line = lineNumber;
+        switch(line)
+            case(1):
+            msg.println(DriverStationLCD.Line.kUser1, 1, message);
+            break;
         
+            case(2):
+            msg.println(DriverStationLCD.Line.kUser1, 2, message);
+            break;
+            
+            case(3):
+            msg.println(DriverStationLCD.Line.kUser1, 3, message);
+            break;
+            
+            case(4):
+            msg.println(DriverStationLCD.Line.kUser1, 4, message);
+            break;
+            
+            case(5):
+            msg.println(DriverStationLCD.Line.kUser1, 5, message);
+            break;
+            
+            case(6):
+            msg.println(DriverStationLCD.Line.kUser1, 6, message);
+            break;
     }
     
     public void update() {
