@@ -51,7 +51,9 @@ public class TargetTracker extends IterativeRobot {
      */
     public void teleopPeriodic() {
 
+        driverStation.clear();
         targetTracker.trackTheTarget();
+        driverStation.update();
 
     }
 
