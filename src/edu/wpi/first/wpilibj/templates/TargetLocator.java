@@ -54,7 +54,7 @@ class TargetLocator {
             image.free();
 
             //Scoring
-            double rectangularity = (particles[0].boundingRectArea / particles[0].particleArea) * 100; //Check these method calls
+            double rectangularity = (particles[0].boundingRectArea() / particles[0].particleArea()) * 100; //Check these method calls
             if(rectangularity > 80.0) {
                 x = particles[0].center_mass_x_normalized;  //store the CoG of the largets particle
             } else {
